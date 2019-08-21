@@ -36,24 +36,23 @@
 
 
 
-
+{{-- 
 <div class="col-md-4">
      <div class="form-group @if($errors->first('language_id')) has-error @endif">
          {!!Form::label('language_id','Language *')!!}<br>
          {!!Form::select('language_id',$languages,null,['class' => 'form-control required','id'=>'language_id','name'=>'language_id','notequal'=>'0','data-live-search'=>'true']) !!}
          <small class="text-danger">{{ $errors->first('language_id') }}</small>
       </div>
-</div> 
+</div> --}}
 
 
-<!-- <div class="col-md-4">
-  <div class="form-group @if($errors->first('language_id')) has-error @endif">
-      {!!Form::label('language_id','Language *')!!}<br>
-      {!!Form::select('language_id',array(),null,['class' => 'form-control ','id'=>'language_id','name'=>'language_id[]','notequal'=>'0','data-live-search'=>'true']) !!}
-      <small class="text-danger">{{ $errors->first('language_id') }}</small>
-   </div>
-</div> -->
-
+<div class="col-md-4">
+     <div class="form-group @if($errors->first('language_id')) has-error @endif">
+         {!!Form::label('language_id','Language *')!!}<br>
+         {!!Form::select('language_id[]',array(),null,['class' => 'form-control ','id'=>'language_id','name'=>'language_id[]','notequal'=>'0','data-live-search'=>'true','multiple']) !!}
+         <small class="text-danger">{{ $errors->first('language_id') }}</small>
+      </div>
+</div>
 
 
 
@@ -67,13 +66,7 @@
       </div>
 </div>
  -->
- <!-- <div class="col-md-4">
-  <div class="form-group @if($errors->first('language_id')) has-error @endif">
-      {!!Form::label('language_id','Language *')!!}<br>
-      {!!Form::select('language_id',$languages,null,['class' => 'form-control required','id'=>'language_id','name'=>'language_id','notequal'=>'0','data-live-search'=>'true']) !!}
-      <small class="text-danger">{{ $errors->first('language_id') }}</small>
-   </div>
-</div> -->
+
 
 <div class="col-md-4">
   <div class="form-group @if($errors->first('doj')) has-error @endif">
@@ -135,6 +128,50 @@
 @parent
 <script type="text/javascript">
 
+var languages=<?php echo json_encode($languages) ?>;
+
+
+var token=$('#token').val();
+
+  var dis1='<option value="0">Select Option...</option>';
+  for(var i=0;i<languages.length;i++){
+    dis1+='<option value='+languages[i]['id']+'>'+languages[i]['name']+'</option>';
+  }
+  console.log(dis1);
+  $('#language_id').html(dis1).selectpicker();
+
+
+
+
+  $('#language_id').change(function(){
+
+// $('#sub_category_id').html('');
+// $('#sub_category_div').html('<label>Select Option *</label><select class="form-control" id="sub_category_id" name="sub_category_id" data-live-search="true"></select>');
+
+var language_id=$('#language_id').val();
+
+ $.ajax({
+  type: 'get',
+  url:'{{URL::route("getBlog")}}',
+  dataType: 'json',
+  data:{language_id:language_id},
+  async:false
+}).done(function(result1) {
+ console.log(result1);
+
+  result=result1['sub_category_details'];
+    var dis_su='<option value=0>Select Sub Category</option>';
+    for(i=0;i<result.length;i++){
+     dis_su+='<option value='+result[i]['id']+'>'+result[i]['name']+'</option>';
+   }
+   $('#language_id').html(dis_su);
+});
+
+});
+
+
+
+
 
 
 
@@ -160,3 +197,19 @@ function validate()
 
 </script>
 @stop
+public function getBlog(Request $request) {
+		// dd($request->all());
+        $blog = DB::table('blog as b')
+        ->join('language AS l', 'l.id', '=', 'b.language_id')
+
+		   ->select('b.*', 'l.name as language_name')
+			->where('b.language_id', $request->language_id)
+			->get();
+
+		// dd($blog);
+
+		return response()->json(array('blog' => $blog));
+	}
+
+
+    Route::get('getBlog', ['as' => 'getBlog', 'uses' => 'BlogController@getBlog']);

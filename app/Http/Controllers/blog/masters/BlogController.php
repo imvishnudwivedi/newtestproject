@@ -35,19 +35,6 @@ class BlogController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-	public function getBlog(Request $request) {
-		// dd($request->all());
-        $blog = DB::table('blog as b')
-        ->join('language AS l', 'l.id', '=', 'b.language_id')
-
-		   ->select('b.*', 'l.name as language_name')
-			->where('b.language_id', $request->language_id)
-			->get();
-
-		// dd($blog);
-
-		return response()->json(array('blog' => $blog));
-	}
 
 
 
@@ -104,8 +91,24 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        //
+        $blog = DB::table('blog as b')
+
+        ->select('b.*')
+        ->where('b.id', $id)
+        ->first();
+
+        $languages=DB::table('language')->lists('name','id');
+
+// dd($blog);
+
+    if ($blog) {
+        return view('blog.masters.blog.edit')->with('blog', $blog)->with('languages', $languages);
+
+    } else {
+
+        return redirect()->route('blog.masters.blog.index')->with('message', 'Cannot Edit Deactivated Details')->with('er_type', 'danger');
     }
+}
 
     /**
      * Update the specified resource in storage.
@@ -116,8 +119,17 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-    }
+      	// dd($request->all());
+		$blog = Blog::where('id', '=', $request->id)->first();
+	
+
+
+
+		$blog->update($request->all());
+
+		return redirect()->route('blog.masters.blog.index')->with('message', 'Updated successfully')->with('er_type', 'success');
+
+	}
 
     /**
      * Remove the specified resource from storage.

@@ -23,9 +23,8 @@ Route::group(['prefix' =>'blog','namespace' => 'blog'], function () {
 
 		// blog masters
 Route::resource('blog', 'BlogController');
-Route::get('getBlog', ['as' => 'getBlog', 'uses' => 'BlogController@getBlog']);
 
-	});
+
 
 });
 
