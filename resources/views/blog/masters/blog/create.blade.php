@@ -38,7 +38,9 @@
 
 
 <div class="col-md-4">
-     <div class="form-group @if($errors->first('language_id')) has-error @endif">
+     
+
+<div class="form-group @if($errors->first('language_id')) has-error @endif">
          {!!Form::label('language_id','Language *')!!}<br>
          {!!Form::select('language_id',$languages,null,['class' => 'form-control required','id'=>'language_id','name'=>'language_id','notequal'=>'0','data-live-search'=>'true']) !!}
          <small class="text-danger">{{ $errors->first('language_id') }}</small>

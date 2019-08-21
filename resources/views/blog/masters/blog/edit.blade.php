@@ -163,24 +163,24 @@ function validate()
     var flag=1;
     if($('#edit-form').valid()){
 
-  if($('#hsn_code').val()==0){
-        $.notify("Please select HSN Code!",{
+  if($('#dob').val()==0){
+        $.notify("Please select Date Of Birth!",{
           type:'danger',
         });
          return false;
       }
 
 
-  if($('#country_id').val()==0){
-        $.notify("Please select Country!",{
+  if($('#doj').val()==0){
+        $.notify("Please select Date Of Joining!",{
           type:'danger',
         });
          return false;
       }
 
 
-  if($('#state_id').val()==0){
-        $.notify("Please select state!",{
+  if($('#phone_number').val()==0){
+        $.notify("Please select Phone Numnber!",{
           type:'danger',
         });
          return false;

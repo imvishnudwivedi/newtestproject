@@ -23,11 +23,11 @@ Route::group(['prefix' =>'blog','namespace' => 'blog'], function () {
 
 		// blog masters
 Route::resource('blog', 'BlogController');
-
+Route::get('/blog/deactivate/{id}', ['as' => 'masters.blog.deactivate', 'uses' => 'BlogController@deactivate']);
 
 
 });
-
+});
 
 function getFormatedDate($date) {
 	$formated_date = date("d F Y", strtotime($date));

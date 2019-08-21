@@ -80,8 +80,17 @@ class BlogController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+      
+        $blog = DB::table('blog as b')
+     
+        ->select('b.*')
+        ->where('b.id', $id)
+        ->first();
+
+        $languages=DB::table('language')->lists('name','id');
+
+    return view('blog.masters.blog.show')->with('blog', $blog)->with('languages', $languages);
+}
 
     /**
      * Show the form for editing the specified resource.
@@ -137,8 +146,17 @@ class BlogController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
-    {
-        //
-    }
+    public function deactivate($id) {
+		$blog = Blog::where('id', '=', $id)->first();
+		if ($blog) {
+			$blog->delete();
+
+			return redirect()->route('blog.masters.blog.index')->with('message', 'Successfully deactivated')->with('er_type', 'danger');
+		} else {
+			$blog = Blog::onlyTrashed()->where('id', '=', $id)->first();
+			$blog->restore();
+
+			return redirect()->route('blog.masters.blog.index')->with('message', 'Successfully activated')->with('er_type', 'success ');
+		}
+	}
 }

@@ -71,8 +71,19 @@
                 <a href="{{URL::to('/')}}/blog/masters/blog/{{$b->id}}/edit" class="td-action-btn point-this" data-toggle="tooltip" data-placement="top" title="Edit">
                   <i class="glyphicon glyphicon-edit"></i>
                 </a>
-
-            
+                <a href="{{URL::to('/')}}/blog/masters/blog/{{$b->id}}" class="td-action-btn point-this" data-toggle="tooltip" data-placement="top" title="View" >
+                  <i class="glyphicon glyphicon-eye-open"></i>
+                </a>
+               
+                @if($b->deleted_at==null)
+                  <a href="{{URL::to('/')}}/blog/masters/blog/deactivate/{{$b->id}}" class="td-action-btn text-danger" data-toggle="tooltip" data-placement="top" title="" data-original-title="Deactivate" onclick="return confirm_delete('Deactivate'); ">
+                    <i class="fa fa-lock text-red" style='font-size:18px;'></i>
+                  </a>
+                @else
+                  <a href="{{URL::to('/')}}/blog/masters/blog/deactivate/{{$b->id}}" class="td-action-btn text-success" data-toggle="tooltip" data-placement="top" title="" data-original-title="Activate" onclick="return confirm_delete('Activate');">
+                    <i class="fa fa-lock text-red" style='font-size:18px;'></i>
+                  </a>
+                @endif
               </td>
 
             </tr>
